@@ -1,0 +1,152 @@
+<%- model_class = Person -%>
+
+<div class="page-header">
+  <h1><%=t '.title', :default => model_class.model_name.human %> | <%= @person.name %></h1> 
+</div>
+
+<p>
+<%= link_to "Org Chart", chart_org_context_path(:id => @person.id), :class => "btn btn-small btn-info", :method => :get %>
+</p>
+
+<table class="table">
+
+<tr><td>
+<dl class="dl-horizontal">
+  <dt><%= model_class.human_attribute_name(:name) %></dt><dd><%= @person.name %></dd>
+  <dt><%= model_class.human_attribute_name(:title) %></dt><dd><%= @person.title %></dd>
+  <dt><%= model_class.human_attribute_name(:group) %></dt><dd><%= b @person.group %></dd>
+</dl>
+</td>
+
+<td>
+<dl class="dl-horizontal">
+  <dt><%= model_class.human_attribute_name(:person_type) %></dt><dd><%= b @person.person_type %></dd>
+  <dt><%= model_class.human_attribute_name(:person_role) %></dt><dd><%= b @person.person_role %></dd>
+  <dt><%= model_class.human_attribute_name(:person_focus) %></dt><dd><%= b @person.person_focus %></dd>
+
+
+<tr><td>
+<dl class="dl-horizontal">
+  <dt><%= model_class.human_attribute_name(:budget) %></dt><dd><%= b @person.budget %></dd>
+  <dt><%= model_class.human_attribute_name(:hr_status) %></dt><dd><%= b @person.hr_status %></dd>
+  <dt><%= model_class.human_attribute_name(:hiring_status) %></dt><dd><%= b @person.hiring_status %></dd>
+</dl>
+</td>
+
+<td>
+
+<dl class="dl-horizontal">
+  <dt><%= model_class.human_attribute_name(:cost_center) %></dt><dd><%= b @person.cost_center %></dd>
+  <dt><%= model_class.human_attribute_name(:business_unit) %></dt><dd><%= b @person.business_unit %></dd>
+</dl>
+</td></tr>
+
+<tr><td colspan="2">
+<dl class="dl-horizontal">
+  <dt><%= model_class.human_attribute_name(:seating) %></dt><dd><%= b @person.seating %></dd>
+  <dt><%= model_class.human_attribute_name(:location_floor) %></dt><dd><%= b @person.location_floor %></dd>
+  <dt><%= model_class.human_attribute_name(:location_code) %></dt><dd><%= b @person.location_code %></dd>
+  <dt><%= model_class.human_attribute_name(:office_phone) %></dt><dd><%= b @person.office_phone %></dd>
+  <dt><%= model_class.human_attribute_name(:cell_phone) %></dt><dd><%= b @person.cell_phone %></dd>
+</dl>
+</td></tr>
+
+<tr><td colspan="2">
+<dl class="dl-horizontal">
+  <dt><%= model_class.human_attribute_name(:peoplesoft_title) %></dt><dd><%= b @person.peoplesoft_title %></dd>
+  <dt><%= model_class.human_attribute_name(:part_time) %></dt><dd><% if @person.part_time %> <i class="icon-ok"></i> <% else %> <i class="icon-minus"></i> <% end %></dd>
+  <dt><%= model_class.human_attribute_name(:temporary) %></dt><dd><% if @person.temporary %> <i class="icon-ok"></i> <% else %> <i class="icon-minus"></i> <% end %></dd>
+</td></tr>
+
+</table>
+
+<!--
+<br>
+<br>
+<br>
+<p>
+  <%= model_class.human_attribute_name(:employment_start_date) %>:<%= @person.employment_start_date %>
+  <%= model_class.human_attribute_name(:employment_end_date) %>:<%= @person.employment_end_date %>
+</p>
+-->
+<br>
+
+<% if @person.source_associations.size > 0 %>
+<strong><%= @person.name %> has the following customers:</strong>
+<table class="table">
+  <thead>
+    <tr>
+      <th style="width: 50%"></th>
+      <th style="width: 50%"></th>
+    </tr>
+  </thead> 
+  <% @person.source_associations.each do |sr| %>
+  <% if sr.association_type == "customer_reporting" %>
+  <tr><td><%= link_to sr.source.name, sr.source %></td><td class="muted"><em><%= sr.source.title %> (<%= sr.association_type.humanize %>)</td></tr>
+  <% end %>
+  <% end %>
+</table>
+
+<% else %>
+<strong><%= @person.name %> does not have any customers.</strong>
+<br><br><br>
+<% end %>
+
+
+
+<% if @person.source_associations.size > 0 %>
+<strong><%= @person.name %> reports to:</strong>
+<table class="table">
+  <thead>
+    <tr>
+      <th style="width: 50%"></th>
+      <th style="width: 50%"></th>
+    </tr>
+  </thead> 
+  <% @person.source_associations.each do |sr| %>
+  <% if sr.association_type == "direct_reporting" || sr.association_type == "dotted_reporting" %>
+  <tr><td><%= link_to sr.source.name, sr.source %></td><td class="muted"><em><%= sr.source.title %> (<%= sr.association_type.humanize %>)</td></tr>
+  <% end %>
+  <% end %>
+</table>
+
+<% else %>
+<strong><%= @person.name %> does not have any customers.</strong>
+<br><br><br>
+<% end %>
+
+
+
+<% if @person.sink_associations.size > 0 %>
+<strong>The following people report to <%= @person.name %>:</strong>
+<table class="table">
+  <thead>
+    <tr>
+      <th style="width: 50%"></th>
+      <th style="width: 50%"></th>
+    </tr>
+  </thead> 
+  <% @person.sink_associations.each do |sr| %>
+  <% if sr.association_type == "direct_reporting" || sr.association_type == "dotted_reporting" %>
+  <tr><td><%= link_to sr.sink.name, sr.sink %></td><td class="muted"><em><%= sr.sink.title %> (<%= sr.association_type.humanize %>)</td></tr>
+  <% end %>
+  <% end %>
+</table>
+
+<% else %>
+<strong><%= @person.name %> does not have any reports.</strong>
+<br><br><br>
+<% end %>
+
+<div class="form-actions">
+  <%= link_to 'Back', people_path, :class => 'btn'  %>
+
+  <% if can?(:update, @person) %>
+  <%= link_to 'Edit', edit_person_path(@person), :class => 'btn' %>
+  <% end %>
+
+  <% if can?(:destroy, @person) %>
+  <%= link_to 'Destroy', person_path(@person), :method => 'delete', :data => { :confirm => 'Confirm', :default => 'Are you sure?' }, :class => 'btn btn-danger' %>
+  <% end %>
+
+</div>

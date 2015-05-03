@@ -1,0 +1,88 @@
+
+source 'https://rubygems.org'
+
+gem 'rails', '3.2.11'
+
+# Bundle edge Rails instead:
+# gem 'rails', :git => 'git://github.com/rails/rails.git'
+
+gem 'mysql2'
+
+# Gems used only for assets and not required
+# in production environments by default.
+group :assets do
+  gem 'sass-rails', '~> 3.2.3'
+  gem "therubyracer", "~> 0.10.2" # See https://github.com/sstephenson/execjs#readme for more supported runtimes
+  gem 'coffee-rails', '~> 3.2.1'
+  gem 'uglifier', '>= 1.0.3'
+  gem 'bootstrap-sass', '2.1'
+  # gem 'bootstrap-sass', '~> 2.3.0.0' # breaks styles right now...
+end
+
+# should contain ujs...
+gem 'jquery-rails'
+
+# To use ActiveModel has_secure_password
+# gem 'bcrypt-ruby', '~> 3.0.0'
+
+# To use Jbuilder templates for JSON
+# gem 'jbuilder'
+
+# Use unicorn as the app server
+# gem 'unicorn'
+gem 'thin'
+
+# Deploy with Capistrano
+gem 'capistrano'
+
+# To use debugger
+# gem 'debugger'
+
+group :development do
+  gem 'hirb'                       # irb tool
+  gem 'better_errors'
+  gem 'binding_of_caller'
+  gem 'meta_request'
+  # get railspanel!
+  gem 'quiet_assets'		   # quiet down the log file, omitting asset requests
+end
+
+gem 'rspec-rails', group: [:test, :development]
+
+group :test do
+  gem 'capybara'
+  gem 'launchy'
+  gem 'poltergeist'
+  gem 'factory_girl_rails'
+  gem 'guard-rspec'
+  #  gem 'rb-inotify', '~> 0.8.8'
+  gem 'rb-fsevent', '~> 0.9.1'
+  gem 'listen'
+  gem 'spork'
+  gem 'guard-spork'
+end
+
+gem 'inherited_resources'		# cleans up controller boilerplate
+gem 'simple_form'			# forms
+gem 'country_select'
+gem 'devise'				# authentication
+gem 'will_paginate'			# pagination
+gem 'syntax'
+gem 'ransack'				# search logic
+# gem 'ancestry'				# hierarchical menus
+gem 'dalli'				# memcache
+gem 'httparty'				# rest client for JIRA pulls
+
+gem 'foreigner'				# migration fk support
+gem 'immigrant'				# generator fk support
+gem 'composite_primary_keys'		# composite foreign key support for rails. sigh.
+
+gem 'ruby-graphviz'
+gem 'browser'                           # simplified user agent detection
+
+
+gem 'cancan'				# access control
+
+gem "rails-backbone"
+gem 'marionette-rails'
+
