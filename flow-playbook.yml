@@ -1,0 +1,72 @@
+---
+- hosts: flow-app
+  sudo: true
+  user: "{{ ansible_ssh_user }}"
+
+  vars:
+
+    http_port: 80
+    max_clients: 200
+
+  tasks:
+
+    - name: ansible env HOME
+      debug: var="{{ ansible_env.HOME }}"
+
+    - name: ansible ssh user
+      debug: var="{{ ansible_ssh_user }}"
+
+    - name: ensure several packages are installed
+      yum: name={{ item }} state=latest update_cache=true
+      with_items:
+        - libxml2
+        - libxml2-devel
+        - libxslt-devel
+        - mariadb-devel
+        - mariadb-libs
+        - graphviz
+        - graphviz-devel
+        - memcached
+        - mariadb-server
+        - mariadb
+        - MySQL-python
+      tags:
+        - packages
+          
+    - name: ensure memcache is started
+      service: name=memcached state=running enabled=yes
+    
+    - name: ensure mysql is started
+      service: name=mariadb state=running enabled=yes
+
+    - name: ensure dev databases are created
+      mysql_db: name=flow_development state=present
+
+    - name: ensure test databases are created
+      mysql_db: name=flow_test state=present
+
+    - name: ensure prod databases are created
+      mysql_db: name=flow_production state=present
+
+    - name: install rvm and rubies gpg
+      become: yes
+      become_user: "{{ ansible_ssh_user }}"
+      shell: curl -sSL https://rvm.io/mpapis.asc | gpg2 --import -
+
+    - name: install rvm
+      become: yes
+      become_user: "{{ ansible_ssh_user }}"
+      shell: curl -sSL https://get.rvm.io | bash -s stable
+
+    - name: install ruby
+      become: yes
+      become_user: "{{ ansible_ssh_user }}"
+      shell: ~/.rvm/bin/rvm install ruby-1.9.3-p551
+
+    # from here, run gem install bundler from the app home, then run bundle install      
+
+  handlers:
+
+    - name: restart memcached
+      service: name=memcached state=restarted
+
